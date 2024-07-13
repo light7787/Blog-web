@@ -1,4 +1,4 @@
-'use client';
+
 import React, { useEffect, useState } from 'react'
 import { assets, blog_data } from '@/Assets/assets'
 import BlogItem from './BlogItem'
