@@ -2,7 +2,7 @@ import { connectDB } from "@/lib/config/db";
 import BlogModel from "@/lib/models/BlogModel";
 import { NextResponse } from "next/server";
 
-const LoadDB = async () => {
+const getDatabaseConnection = async () => {
     try {
         await connectDB();
         console.log("Database connected successfully");
@@ -12,10 +12,9 @@ const LoadDB = async () => {
     }
 };
 
-LoadDB();
-
-// API Endpoint to get all blogs
+// API Endpoint to get all blogs or a specific blog by ID
 export async function GET(request) {
+    await getDatabaseConnection(); // Ensure DB connection is established
     try {
         const blogId = request.nextUrl.searchParams.get("id");
 
@@ -34,6 +33,7 @@ export async function GET(request) {
 
 // API Endpoint for uploading blogs
 export async function POST(req) {
+    await getDatabaseConnection(); // Ensure DB connection is established
     try {
         const formData = await req.formData();
         console.log("Form data received:", formData);
@@ -65,6 +65,7 @@ export async function POST(req) {
 
 // API endpoint to DELETE blog
 export async function DELETE(request) {
+    await getDatabaseConnection(); // Ensure DB connection is established
     try {
         const id = request.nextUrl.searchParams.get('id');
 
