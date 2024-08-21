@@ -1,6 +1,7 @@
 import { connectDB } from "@/lib/config/db";
 import BlogModel from "@/lib/models/BlogModel";
 import { NextResponse } from "next/server";
+import { writeFile } from 'fs/promises';
 
 const LoadDB = async () => {
     try {
@@ -36,18 +37,22 @@ export async function GET(request) {
 export async function POST(req) {
     try {
         const formData = await req.formData();
+        const timestamp = Date.now();
         console.log("Form data received:", formData);
 
         const image = formData.get('image');
         const imageByteData = await image.arrayBuffer();
         const buffer = Buffer.from(imageByteData);
+        const path =`./public/${timestamp}_${image.name}`;
+        await writeFile(path,buffer);
+        const imgUrl = `/${timestamp}_${image.name}`;
 
         const blogData = {
             title: formData.get('title'),
             description: formData.get('description'),
             category: formData.get('category'),
             author: formData.get('author'),
-            image: buffer,  // Store the image binary data in MongoDB
+            image:`${imgUrl}`,  // Store the image binary data in MongoDB
             authorImg: formData.get('authorImg')
         };
 
